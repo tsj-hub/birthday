@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>生日快乐！🎂</title>
+    <!-- 引入 Font Awesome 图标库（用于动画图，可替换为图片） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ---------- 全局样式 ---------- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f6d5f7, #fbe9d7);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* 主卡片 */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 90%;
+            margin: 20px auto;
+            animation: fadeIn 2s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #ff6f61;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cake {
+            font-size: 8em;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+
+        p {
+            font-size: 1.5em;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 装饰气球（可保留） */
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            background: red;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 6s infinite ease-in-out;
+            z-index: 0;
+        }
+        .balloon::before {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 40px;
+            background: #aaa;
+            bottom: -40px;
+            left: 24px;
+        }
+        .balloon1 { left: 5%; top: 15%; background: #ffb6c1; animation-delay: 0s; }
+        .balloon2 { right: 5%; top: 25%; background: #add8e6; animation-delay: 1s; }
+        .balloon3 { left: 15%; bottom: 10%; background: #98fb98; animation-delay: 2s; }
+
+        /* 按钮样式（主页的“点击打开惊喜”） */
+        .surprise-btn {
+            padding: 12px 24px;
+            font-size: 1.5em;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,111,97,0.4);
+            transition: 0.3s;
+        }
+        .surprise-btn:hover {
+            background: #ff4f3e;
+            transform: scale(1.05);
+        }
+
+        /* ---------- 模态框样式 ---------- */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 30px;
+            max-width: 500px;
+            width: 85%;
+            text-align: center;
+            animation: fadeIn 0.5s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: #ff6f61;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        /* 左右图片区域（flex布局） */
+        .gift-box {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0 30px;
+        }
+
+        .gift-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .gift-item i {
+            font-size: 5em;
+            color: #ff8a7a;
+            margin-bottom: 10px;
+        }
+
+        .gift-item p {
+            font-size: 1.2em;
+            margin: 0;
+            color: #555;
+        }
+
+        /* 耳机动画：左右摇摆 */
+        .headphone-animation {
+            animation: swing 2s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        /* 水杯动画：上下浮动 */
+        .cup-animation {
+            animation: float 2.5s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        /* 模态框底部按钮 */
+        .modal-btn {
+            padding: 12px 30px;
+            font-size: 1.3em;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(255,111,97,0.3);
+            transition: 0.3s;
+        }
+        .modal-btn:hover {
+            background: #ff4f3e;
+            transform: scale(1.05);
+        }
+
+        /* 关闭按钮（小叉） */
+        .close-modal {
+            float: right;
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            margin-top: -15px;
+            margin-right: -10px;
+        }
+        .close-modal:hover {
+            color: #333;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰气球 -->
+    <div class="balloon balloon1"></div>
+    <div class="balloon balloon2"></div>
+    <div class="balloon balloon3"></div>
+
+    <!-- 主卡片 -->
+    <div class="card">
+        <h1>🎉 生日快乐！ 🎉</h1>
+        <div class="cake">🎂</div>
+        <!-- 请将 [名字] 替换为寿星的名字 -->
+        <p>亲爱的 妈妈，</p>
+        <p>愿你的每一天都充满阳光和欢笑，<br>愿所有的美好都如约而至！</p>
+        <p>🎈 祝你新的一岁，心想事成，永远开心！ 🎈</p>
+        <p style="font-size: 1.2em; margin-top: 30px;">—— 爱你的女儿</p>
+
+        <!-- 主页按钮：点击打开惊喜 -->
+        <button class="surprise-btn" onclick="showModal()">🎁 点击打开惊喜 🎁</button>
+    </div>
+
+    <!-- 模态框（惊喜礼物） -->
+    <div id="giftModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideModal()">&times;</span>
+            <h2>✨ 给你的小礼物 ✨</h2>
+            
+            <!-- 左右两个礼物（可替换为图片） -->
+            <div class="gift-box">
+                <!-- 左侧：耳夹式耳机（使用 Font Awesome 图标 + 动画） -->
+                <div class="gift-item">
+                    <i class="fas fa-headphones headphone-animation"></i>
+                    <p>耳夹式耳机</p>
+                    <!-- 如果要用真实图片，请注释掉上面的 <i>，改用 <img>，例如： -->
+                    <!-- <img src="耳机图片.jpg" alt="耳机" style="width:80px; animation: swing 2s infinite;"> -->
+                </div>
+                <!-- 右侧：旅行式水杯（使用 Font Awesome 图标 + 动画） -->
+                <div class="gift-item">
+                    <i class="fas fa-mug-hot cup-animation"></i>
+                    <p>旅行水杯</p>
+                    <!-- 如果要用真实图片： -->
+                    <!-- <img src="水杯图片.jpg" alt="水杯" style="width:80px; animation: float 2.5s infinite;"> -->
+                </div>
+            </div>
+
+            <!-- 底部按钮（文字可修改） -->
+            <!-- 点击后跳转到第二个页面 page2.html -->
+            <button class="modal-btn" onclick="window.location.href='page2.html'">
+                点击领取最终祝福 🎂
+            </button>
+            <p style="font-size:0.9em; color:#999; margin-top:15px;">（按钮文字可随意修改）</p>
+        </div>
+    </div>
+
+    <script>
+        // 显示模态框
+        function showModal() {
+            document.getElementById('giftModal').style.display = 'flex';
+        }
+        // 隐藏模态框
+        function hideModal() {
+            document.getElementById('giftModal').style.display = 'none';
+        }
+        // 点击模态框外部也可以关闭
+        window.onclick = function(event) {
+            var modal = document.getElementById('giftModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
